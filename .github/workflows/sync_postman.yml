@@ -17,7 +17,8 @@ jobs:
             -o iss-moex-api.json
       - name: Commit and push
         run: |
+          git config user.email "bot@postman.com"
           git config user.name "Postman Sync Bot"
           git add iss-moex-api.json
           git diff --staged --quiet || git commit -m "chore: sync Postman collection"
-          git push
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/Snejock/moex-api-collection.git
