@@ -1,0 +1,22 @@
+name: Sync Postman Collection
+
+on:
+  schedule:
+    - cron: '0 9 * * *'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Fetch collection from Postman API
+        run: |
+          curl -s "https://api.getpostman.com/collections/fefa5dda-ddfc-4c4f-a3e3-aba28a7e0f1b" \
+            -H "X-Api-Key: ${{ secrets.POSTMAN_API_KEY }}" \
+            -o postman/iss-moex-api.json
+      - name: Commit and push
+        run: |
+          git config user.name "Postman Sync Bot"
+          git add postman/iss-moex-api.json
+          git diff --staged --quiet || git commit -m "chore: sync Postman collection"
+          git push
